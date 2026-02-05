@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+  mysqldb:
+    container_name: mysql-db
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: 8789
+      MYSQL_DATABASE: bidverse_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  backend:
+    container_name: bidverse-backend
+    build:
+      context: ./bidverse-backend
+      dockerfile: backend.Dockerfile
+    environment:
+      # Add allowPublicKeyRetrieval to support the default MySQL auth in this containerized setup
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/bidverse_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 8789
+      SERVER_PORT: 2000
+      SERVER_ADDRESS: 0.0.0.0
+      FRONTEND_ORIGINS: "http://localhost:30021,http://127.0.0.1:30021"
+    ports:
+      - "2000:30020"
+    depends_on:
+      - mysqldb
+    restart: on-failure
+
+  frontend:
+    container_name: bidverse-frontend
+    build:
+      context: ./bidverse-frontend
+      dockerfile: frontend.Dockerfile
+      args:
+        # build with empty so app uses relative paths (e.g. /api/...)
+        VITE_API_BASE_URL: ""
+    ports:
+      - "30021:80"
+    depends_on:
+      - backend
+    restart: on-failure
+
+volumes:
+  mysql-data:
