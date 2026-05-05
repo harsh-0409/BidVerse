@@ -141,8 +141,3 @@ npm run preview
 - Docker frontend: `30021`
 
 ---
-
-## What to commit / not commit
-
-- Commit: `docker-compose.yml`, `bidverse-backend/backend.Dockerfile`, `bidverse-frontend/frontend.Dockerfile`, `bidverse-frontend/nginx.conf`
-- Don’t commit: secrets/passwords, `.env` containing secrets, build output (`target/`, `dist/`), `node_modules/`
