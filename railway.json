@@ -1,0 +1,82 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "dockerfile",
+    "context": "."
+  },
+  "deploy": {
+    "restartPolicyType": "on-failure",
+    "restartPolicyMaxRetries": 5,
+    "startCommand": "echo 'Services will start via docker-compose'"
+  },
+  "services": {
+    "database": {
+      "image": "mysql:8",
+      "variables": {
+        "MYSQL_ROOT_PASSWORD": "${{ secrets.DATABASE_PASSWORD }}",
+        "MYSQL_DATABASE": "bidverse_db"
+      },
+      "volumes": {
+        "mysql_data": "/var/lib/mysql"
+      },
+      "port": 3306,
+      "healthCheck": {
+        "test": [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost"
+        ],
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 5
+      }
+    },
+    "backend": {
+      "dockerfile": "./bidverse-backend/backend.Dockerfile",
+      "variables": {
+        "SPRING_DATASOURCE_URL": "jdbc:mysql://${{ services.database.host }}:${{ services.database.port }}/bidverse_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true",
+        "SPRING_DATASOURCE_USERNAME": "root",
+        "SPRING_DATASOURCE_PASSWORD": "${{ secrets.DATABASE_PASSWORD }}",
+        "SPRING_JPA_HIBERNATE_DDL_AUTO": "update",
+        "SPRING_JPA_SHOW_SQL": "false",
+        "SERVER_PORT": "2000",
+        "SERVER_ADDRESS": "0.0.0.0",
+        "FRONTEND_ORIGINS": "${{ services.frontend.domain }}"
+      },
+      "port": 2000,
+      "depends_on": ["database"],
+      "healthCheck": {
+        "test": [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:2000/api/health"
+        ],
+        "interval": "30s",
+        "timeout": "10s",
+        "retries": 3
+      }
+    },
+    "frontend": {
+      "dockerfile": "./bidverse-frontend/frontend.Dockerfile",
+      "buildArgs": {
+        "VITE_API_BASE_URL": ""
+      },
+      "variables": {
+        "VITE_API_BASE_URL": ""
+      },
+      "port": 80,
+      "depends_on": ["backend"]
+    }
+  },
+  "secrets": {
+    "DATABASE_PASSWORD": "${{ secrets.DATABASE_PASSWORD }}"
+  },
+  "variables": {
+    "ENVIRONMENT": "production",
+    "JAVA_VERSION": "21",
+    "NODE_VERSION": "20"
+  }
+}
