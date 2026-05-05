@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { resolveAssetUrl } from '../apiBootstrap';
 import { useAuth } from '../context/AuthContext'; // Import the AuthContext
 
 function BillPayment() {
@@ -78,7 +79,7 @@ function BillPayment() {
                 <TableRow key={item.id}>
                   <TableCell>
                     <img
-                      src={`http://localhost:8080${item.productImage}`} // Prepend the base URL
+                      src={resolveAssetUrl(item.productImage)} // Prepend the base URL
                       alt={item.productName}
                       style={{ width: '50px', height: '50px', borderRadius: '8px' }}
                     />

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { Box, Typography, Card, CardContent, CardMedia, Grid, Button } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import { resolveAssetUrl } from '../../apiBootstrap';
 
 function WonItems() {
   const [wonItems, setWonItems] = useState([]);
@@ -56,7 +57,7 @@ function WonItems() {
                 <CardMedia
                   component="img"
                   height="140"
-                  image={`http://localhost:8080${item.productImage}`}
+                    image={resolveAssetUrl(item.productImage)}
                   alt={item.productName}
                 />
               )}

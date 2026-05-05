@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link as RouterLink } from 'react-router-dom';
+import { resolveAssetUrl } from '../apiBootstrap';
 import {
   Box,
   Typography,
@@ -35,7 +36,7 @@ function CatalogFull() {
       <Grid container spacing={3}>
         {items.map((item) => {
           const imageSrc = item.imageUrl
-            ? `http://localhost:8080${item.imageUrl}`
+            ? resolveAssetUrl(item.imageUrl)
             : PLACEHOLDER_IMAGE;
           return (
             <Grid item xs={12} sm={6} md={3} key={item.id}>

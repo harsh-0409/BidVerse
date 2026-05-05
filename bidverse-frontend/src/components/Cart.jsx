@@ -1,6 +1,7 @@
 // src/components/Cart.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { resolveAssetUrl } from '../apiBootstrap';
 import {
   Box,
   Typography,
@@ -86,7 +87,7 @@ function Cart() {
                     <Avatar
                       variant="rounded"
                       sx={{ width: 56, height: 56, borderRadius: '8px' }}
-                      src={item.imageUrl ? `http://localhost:8080${item.imageUrl}` : '/placeholder.jpg'} // Prepend base URL
+                      src={item.imageUrl ? resolveAssetUrl(item.imageUrl) : '/placeholder.jpg'} // Prepend base URL
                       alt={item.name}
                     />
                   </TableCell>

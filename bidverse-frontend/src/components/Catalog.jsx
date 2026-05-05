@@ -1,6 +1,7 @@
 // src/components/Catalog.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { resolveAssetUrl } from '../apiBootstrap';
 import {
   Box,
   Typography,
@@ -180,7 +181,7 @@ function Catalog() {
           ) : (
             limitedItems.map((item) => {
               const imageSrc = item.imageUrl
-                ? `http://localhost:8080${item.imageUrl}`
+                ? resolveAssetUrl(item.imageUrl)
                 : PLACEHOLDER_IMAGE;
 
               return (
