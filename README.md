@@ -6,6 +6,12 @@ BidVerse is a full‑stack bidding/auction web app.
 - **Frontend:** React + Vite
 - **Reverse proxy (Docker):** Nginx serves the built frontend and proxies `/api` + `/uploads` to the backend
 
+## Live Deployment
+
+- **Frontend:** https://frontend-production-e286.up.railway.app/
+
+If the app is taking a moment to wake up on first load, refresh once after a few seconds.
+
 ## Repository structure
 
 - `bidverse-backend/` — Spring Boot API
